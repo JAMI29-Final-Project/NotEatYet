@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/piatti")
+@RequestMapping
 public class ControllerPiatti {
 
     //interfaccia che gestisce le chiamate della tabella Ristoranti
@@ -30,18 +30,18 @@ public class ControllerPiatti {
     @Autowired
     IIngredientiCRUD ingredientiGEST;
 
-    @GetMapping("/{idRistoratore}")
+    @GetMapping("/piatti/ristoranteid/{idRistoratore}")
     public List<Piatto> piatti (@PathVariable int idRistoratore){
         return piattiGEST.findPiattoByRistoranteId(idRistoratore);
     }
 
-    @GetMapping("/{idPiatto}")
+    @GetMapping("/piatti/piattoid/{idPiatto}")
     public Piatto piatto (int piatto){
 
         return piattiGEST.findById(piatto).orElse(null);
     }
 
-    @PostMapping("/{idRistorante}/{idCaregoria}")
+    @PostMapping("/piatti/{idRistorante}/{idCaregoria}")
     public void addPiatto(@PathVariable int idRistorante, @PathVariable int idCategoria, @RequestBody Piatto piatto){
         Categoria categoria = categorieGEST.findById(idCategoria).orElse(null);
         Ristorante ristorante = ristorantiGEST.findById(idRistorante).orElse(null);
@@ -50,13 +50,13 @@ public class ControllerPiatti {
         piattiGEST.save(piatto);
     }
 
-    @DeleteMapping("/{idPiatto}")
+    @DeleteMapping("/piatti/{idPiatto}")
     public void delete(@PathVariable int idPiatto){
        ingredientiGEST.deleteIngredienteByPiattoId(idPiatto);
        piattiGEST.deleteById(idPiatto);
     }
 
-    @PutMapping("/{idRistorante}/{idCaregoria}")
+    @PutMapping("/piatti/{idRistorante}/{idCaregoria}")
     public void editPiatto(@PathVariable int idRistorante, @PathVariable int idCategoria, @RequestBody Piatto piatto ){
 
     }
