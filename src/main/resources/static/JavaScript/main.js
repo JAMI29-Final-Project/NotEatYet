@@ -14,7 +14,7 @@ $(document).ready(function () {
                     <div class="btn-group" role="group">
                         <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Opzioni</button>
                             <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                <li><a class="dropdown-item btn-dettaglio" data-id='${resume[i].id}'>Dettaglio</a></li>
+                                <li><a class="dropdown-item btn-dettaglio" href='ristorante-dettaglio.html' data-id='${resume[i].id}'>Dettaglio</a></li>
                                 <li><a class="dropdown-item btn-modifica" data-bs-toggle="modal" data-bs-target="#modifica" data-id='${resume[i].id}'>Modifica</a></li>
                                 <li><a class="dropdown-item btn-elimina" data-id='${resume[i].id}'>Elimina</a></li>
                             </ul>
@@ -27,24 +27,27 @@ $(document).ready(function () {
     getRistoranti();
 
     $('#output').on('click', '.btn-dettaglio', function () {
-        
-        const id = $(this).attr('data-id');
-        getRistorante(id);
-        console.log(id);
-       /* window.location.href='ristorante-dettaglio.html';*/
+        const idristorante = $(this).attr('data-id');
+        getRisto(idristorante);
     });
-    function getRistorante(id) {
-        $.get(`ristoranti/${id}`, function(res) {
-            console.log(res);
+    
+    function getRisto(idristorante) {
+        $.get(`ristoranti/${idristorante}`, function (dettaglio) {
+            console.log(dettaglio);
+            console.log(dettaglio.ragionesociale);
+            console.log(dettaglio.piva);
             const dettaglioRis = $('#dettaglioRis');
-			$(`
-            <p class='fs-1 fw-bold text-dark'>${res.ragionesociale} nel Dettaglio</p> 
-            <h4 class='fw-light text-dark'><strong class="fw-bolder">Nome: </strong>${res.nome}</h4> 
-            <h4 class='fw-light text-dark' id="piva"><strong>Partita IVA: </strong>[IVA]</h4>   
+			let row = `
+            <p class='fs-1 fw-bold text-dark'>${dettaglio.ragionesociale} nel Dettaglio</p> 
+            <h4 class='fw-light text-dark'><strong class="fw-bolder">Nome: </strong>${dettaglio.ragionesociale}</h4> 
+            <h4 class='fw-light text-dark' id="piva"><strong>Partita IVA: </strong>${dettaglio.piva}</h4>   
             <h4 class='fw-light text-dark' id="via"><strong>Indirizzo: </strong>[VIA]</h4> 
             <h4 class='fw-light text-dark' id="citta"><strong>Citta: </strong>[CITTA][REGIONE]</h4>
             <h4 class='fw-light text-dark' id="regione"><strong>Citta: </strong>[CITTA][REGIONE]</h4>
-			`).appendTo(dettaglioRis);
+			`;
+            console.log(row);
+            $(dettaglioRis).append(row);
+           /* window.location.href='ristorante-dettaglio.html';*/
 		})
 	}
 
