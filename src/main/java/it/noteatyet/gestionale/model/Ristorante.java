@@ -7,7 +7,7 @@ import java.util.List;
 @Table(name = "ristoranti")
 public class Ristorante {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto_increment
     private int id;
     private String ragionesociale;
     private String piva;
