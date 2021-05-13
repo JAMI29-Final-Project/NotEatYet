@@ -7,7 +7,7 @@
 	<meta name='viewport' content='width=device-width, initial-scale=1.0'> 
   <!-- Stile Personalizzato Solo per le liste -->  
 	<link rel="stylesheet" href="css/lista_style.css">
-    <script src="./JavaScript/jquery-3.6.0.min.js"></script> 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="./JavaScript/main.js"></script>
     <!-- Libreria per i popout di conferma -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -25,7 +25,7 @@
     <!-- JavaScript Bundle with Popper -->
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js' integrity='sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf' crossorigin='anonymous'></script>
 	<title>NotEatYet - Dettaglio</title>
-    <header>   
+    <header>
         <nav class='navbar navbar-expand-lg navbar-dark bg-red fixed-top'>   
             <div class='container-fluid'>   
                 <a href="ristoranti.html"><figure class="hover-rotate"><img src='./logos/homepage_logo.png' alt='block' style='padding-left: 5px; width: 100px;'></figure></a>   
@@ -48,17 +48,17 @@
                         </ul> 
                         </li>
                           <li class='nav-item dropdown distance-btn'>   
-                            <a class='nav-link dropdown-toggle bg-yellow text-btn' href='#' id='navbarDropdown' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Opzioni</a>   
-                                <ul class='dropdown-menu dropdown-menu-lg-end' aria-labelledby='navbarDropdown'>   
+                            <a class='nav-link dropdown-toggle bg-yellow text-btn' href='#' id='navbarDropdown1' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Opzioni</a>
+                                <ul class='dropdown-menu dropdown-menu-lg-end' aria-labelledby='navbarDropdown1'>
                                   <li><a class='dropdown-item' aria-current='page' href='aggiungi-ristorante.html'>Aggiungi Ristorante</a></li>
                                   <li><a class='dropdown-item' aria-current='page' href='aggiungi-piatto.html'>Aggiungi Piatto al Menu</a></li>
                                 </ul> 
                               </li>
                               <li class='nav-item dropdown distance-btn'>   
-                                <a class='nav-link dropdown-toggle bg-yellow text-btn' href='#' id='navbarDropdown' role='button' data-bs-toggle='dropdown' aria-expanded='false'>   
+                                <a class='nav-link dropdown-toggle bg-yellow text-btn' href='#' id='navbarDropdown2' role='button' data-bs-toggle='dropdown' aria-expanded='false'>
                                     Altro 
                                 </a>   
-                                <ul class='dropdown-menu dropdown-menu-lg-end' aria-labelledby='navbarDropdown'>   
+                                <ul class='dropdown-menu dropdown-menu-lg-end' aria-labelledby='navbarDropdown2'>
                                   <li><a class='dropdown-item' aria-current='page' href='changelog.html'>Changelog</a></li>
                                 </ul> 
                                 </li>
@@ -70,8 +70,8 @@
 					
 			    </div>   
 			</div>   
-		</nav>  
-		</header> 
+		</nav>
+		</header>
         <body class='bg-image pictureRistoranti'> 
             <!-- Fine Menu, inzio pagina -->
                 <div class="container opacity">
@@ -81,8 +81,8 @@
                             <div class='card-body'> 
                                 <div class='text-center'> 
                                   <div id="dettaglioRis"></div>
-                                  <p id="testaaa">t</p>
-                                <!--    <p class='fs-1 fw-bold text-dark' id="dettaglio">Test</p> 
+                                  <p id="prova"></p>
+                                  <!--  <p class='fs-1 fw-bold text-dark' id="nome">Test</p> 
                                     <h4 class='fw-light text-dark' id="ragionesociale"><strong class="fw-bolder">Nome: </strong>[NOME]</h4> 
                                     <h4 class='fw-light text-dark' id="piva"><strong>Partita IVA: </strong>[IVA]</h4>   
                                     <h4 class='fw-light text-dark' id="via"><strong>Indirizzo: </strong>[VIA]</h4> 
