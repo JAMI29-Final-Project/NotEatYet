@@ -53,12 +53,10 @@ public class ControllerRistoranti {
         Ristorante ristorante = getOne(id);
 
         for (Piatto piattodel : ristorante.getMenu()) {
-            
-                ingredientiGEST.deleteIngredienteByPiattoId(piattodel.getId());
-
-            
+            for(Ingrediente ingrediente : piattodel.getIngredienti()) {
+                ingredientiGEST.deleteById(ingrediente.getId());
+            }
             piattiGEST.deleteById(piattodel.getId());
-
         }
         ristorantiGEST.deleteById(ristorante.getId());
     }
