@@ -1,3 +1,4 @@
+create database prova;
 use prova;
 INSERT INTO prova.ristoranti (id, citta, ncivico, piva, ragionesociale, regione, via) VALUES (1, 'Pittsburgh', 84, '544924115-1', 'Mydeo', 'Pennsylvania', 'Montana');
 INSERT INTO prova.ristoranti (id, citta, ncivico, piva, ragionesociale, regione, via) VALUES (2, 'Evansville', 39, '362525888-9', 'Brainsphere', 'Indiana', 'Loeprich');
