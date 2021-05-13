@@ -25,13 +25,13 @@ public class ControllerRistoranti {
     IIngredientiCRUD ingredientiGEST;
 
     @GetMapping("/ristoranti")
-    public List<Ristorante> getAll() {
+        public List<Ristorante> getAll() {
 
-        return ristorantiGEST.findAll();
-    }
+            return ristorantiGEST.findAll();
+        }
 
-    @GetMapping("/ristoranti/{id}")
-    public Ristorante getOne(@PathVariable int id) {
+        @GetMapping("/ristoranti/{id}")
+        public Ristorante getOne(@PathVariable int id) {
 
         Ristorante ristorante = ristorantiGEST.findById(id).orElse(null);
         ristorante.setMenu(piattiGEST.findPiattoByRistoranteId(id));

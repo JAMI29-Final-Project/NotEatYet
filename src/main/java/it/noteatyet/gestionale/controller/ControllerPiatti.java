@@ -32,13 +32,26 @@ public class ControllerPiatti {
 
     @GetMapping("/piatti/ristoranteid/{idRistoratore}")
     public List<Piatto> piatti (@PathVariable int idRistoratore){
-        return piattiGEST.findPiattoByRistoranteId(idRistoratore);
+        List <Piatto> piatti = piattiGEST.findPiattoByRistoranteId(idRistoratore);
+        for(Piatto piatto : piatti){
+            piatto.setIngredienti(ingredientiGEST.findIngredienteByPiattoId(piatto.getId()));
+        }
+
+        return piatti;
+
     }
 
     @GetMapping("/piatti/piattoid/{idPiatto}")
-    public Piatto piatto (int piatto){
-
-        return piattiGEST.findById(piatto).orElse(null);
+    public Piatto piatto (@PathVariable int idPiatto){
+        System.out.println(idPiatto +"");
+        Piatto piatto = piattiGEST.findById(idPiatto).orElse(null);
+        piatto.setIngredienti(ingredientiGEST.findIngredienteByPiattoId(piatto.getId()));
+        /*if(piatto == null){
+            System.out.println("nullo");
+        } else {
+            System.out.println("non nullo");
+        }*/
+        return piatto;
     }
 
     @PostMapping("/piatti/{idRistorante}/{idCaregoria}")
@@ -58,6 +71,5 @@ public class ControllerPiatti {
 
     @PutMapping("/piatti/{idRistorante}/{idCaregoria}")
     public void editPiatto(@PathVariable int idRistorante, @PathVariable int idCategoria, @RequestBody Piatto piatto ){
-
     }
 }
