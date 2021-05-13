@@ -30,6 +30,11 @@ public class ControllerPiatti {
     @Autowired
     IIngredientiCRUD ingredientiGEST;
 
+    @GetMapping("/piatti")
+    public List<Piatto> getAll(){
+        return piattiGEST.findAll();
+    }
+
     @GetMapping("/piatti/ristoranteid/{idRistoratore}")
     public List<Piatto> piatti (@PathVariable int idRistoratore){
         return piattiGEST.findPiattoByRistoranteId(idRistoratore);
