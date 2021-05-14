@@ -13,6 +13,10 @@ import java.util.List;
 @RestController
 public class ControllerPiatti {
 
+    /*
+    *PIATTI OK review by EDOARDO CAROLLO
+    */
+
     //interfaccia che gestisce le chiamate della tabella Ristoranti
     @Autowired
     IRistorantiCRUD ristorantiGEST;
