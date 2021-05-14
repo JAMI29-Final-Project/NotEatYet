@@ -1,0 +1,99 @@
+.bg-red {
+    background-color: #ae2a2f !important;
+}
+
+.bg-yellow {
+    background-color: #fec24a !important;
+    border-radius: 100px !important;
+}
+
+/* EFFETTO ROTAZIONE IMG ON MOUSE */
+.hover-rotate {
+    overflow: hidden;
+    margin: 8px;
+    min-width: 240px;
+    max-width: 320px;
+    width: 100%;
+  }
+  
+  .hover-rotate img {
+    transition: all 0.3s;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+  
+  .hover-rotate:hover img {
+    transform: scale(1.3) rotate(5deg);
+  }
+/* Fine Hover */
+
+.text-btn {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    color: #ae2a2f !important;
+}
+
+.distance-btn {
+    padding-bottom: 10px !important;
+    padding-top: 10px !important;
+    padding-left: 10px !important;
+}
+
+.pictureRistoranti {
+    background-image: url('../img/homepage.jpg'); 
+    height: 100vh; 
+    margin: 0px; 
+    background-size: cover; 
+    background-position: top;
+}
+
+.opacity{
+    opacity: 0.9;
+}
+
+/* Stile solo Search Bar */
+.searchbarMenu{
+    margin-bottom: auto;
+    margin-top: auto;
+    height: 42px;
+    background-color: #fec24a;
+    border-radius: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    }
+
+    .search_input{
+    color: white;
+    border: 0;
+    outline: 0;
+    background: none;
+    width: 0;
+    caret-color:transparent;
+    line-height: 40px;
+    transition: width 0.4s linear;
+    }
+
+    .searchbarMenu:hover > .search_input{
+    padding: 0 10px;
+    width: 300px;
+    caret-color:white;
+    transition: width 0.4s linear;
+    }
+
+    .searchbarMenu:hover > .search_icon{
+    background: white;
+    color: #e74c3c;
+    }
+
+    .search_icon{
+    height: 40px;
+    width: 40px;
+    float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color:white;
+    text-decoration:none;
+    }
+/*Fine Search Bar */
