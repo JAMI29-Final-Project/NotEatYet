@@ -14,7 +14,7 @@ $(document).ready(function () {
                         <button id="btnGroupDrop` + i + `" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Opzioni</button>
                             <ul class="dropdown-menu" aria-labelledby="btnGroupDrop` + i + `">
                             <li><a class="dropdown-item btn-dettaglio" data-bs-toggle="modal" data-bs-target="#dettaglio" data-id='${resume[i].id}'>Dettaglio</a></li>
-                                <li><a class="dropdown-item btn-modifica" data-bs-toggle="modal" data-bs-target="#modifica" data-id='${resume[i].id}'>Modifica</a></li>
+                                <li><a class="dropdown-item btn-modifica" data-bs-toggle="modal" data-bs-target="#modifica" data-id='${resume[i].id}' data-categoria='${resume[i].categoria.id}'>Modifica</a></li>
                                 <li><a class="dropdown-item btn-elimina" data-id='${resume[i].id}'>Elimina</a></li>
                             </ul>
                     </div>
@@ -119,6 +119,71 @@ $(document).ready(function () {
           })
       });
     
+    let editMode = false;
+    let idModifica = -1;
+    $('#listaPiatti').on('click', '.btn-modifica', function () {
+        editMode = true;
+        const id = +$(this).attr('data-id');
+        const categoria = +$(this).attr('data-categoria');
+        idModifica = id;
+        $.get(`/piatti/piattoid/${id}`, function(modifica) {
+            $('#nome').val(modifica.nome);
+            $('#categoria').val(modifica.categoria.nome);
+            $('#prezzo').val(modifica.prezzo);
+            $('#modificaRistormodificaPiattoTitleanteTitle').text('Modifica ' + modifica.nome);
+            $('#modificaPiatto').text('Modifica ' + modifica.nome);
+            $('#title').text('Modifica ' + modifica.nome);
+        });
+    });
+    $('#modificaRistorante').click(function () {
+        const ristorante = {
+            ragionesociale: $('#ragionesociale').val(),
+            piva: $('#piva').val(),
+            citta: $('#cittaRistorante').val(),
+            regione: $('#regioneRistorante').val(),
+            via: $('#viaRistorante').val(),
+            ncivico: $('#ncivico').val()            
+        }
+        console.log(ristorante);
+        if (editMode) {
+            Swal.fire({
+                icon: 'question',
+                title: 'Vuoi salvare la Modifica di ' + ristorante.ragionesociale + '?',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: `Salva`,
+                denyButtonText: `Non Salvare`,
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    Swal.fire('Salvato!', '', 'success')
+                    ristorante.id = idModifica;
+                    modificaRistorante(ristorante);
+                    setTimeout(function () {
+                        window.location.href='ristoranti.html';
+                    }, 2000);
+                } else if (result.isDenied) {
+                    Swal.fire('Modifiche non salvate', '', 'info')
+                }
+            })     
+        }
+    })
+    function modificaRistorante(ristorante) {
+        $.ajax({
+            type: "PUT",
+            url: "ristoranti",
+            data: JSON.stringify(ristorante),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (response) {
+                    editMode = false;
+                    idModifica = -1;
+            },
+           /* error: function (error) {
+                alert("Problema nella modifica");                
+            }*/
+        });
+    }
     function addpiatto(piatto){
         console.log(piatto);
         $.ajax({

@@ -150,6 +150,7 @@ $(document).ready(function () {
             $('#regioneRistorante').val(modifica.regione);
             $('#viaRistorante').val(modifica.via);
             $('#ncivico').val(modifica.ncivico);
+            $('#modificaRistoranteTitle').text('Modifica ' + modifica.ragionesociale);
             $('#modificaRistorante').text('Modifica ' + modifica.ragionesociale);
             $('#title').text('Modifica ' + modifica.ragionesociale);
         });
