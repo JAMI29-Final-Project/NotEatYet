@@ -7,8 +7,8 @@
 	<meta name='viewport' content='width=device-width, initial-scale=1.0'> 
   <!-- Stile Personalizzato Solo per le liste -->  
 	<link rel="stylesheet" href="css/lista_style.css">
-    <script src="./JavaScript/jquery-3.6.0.min.js"></script> 
-    <script src="./JavaScript/main.js"></script>
+    <script src="./ristoranteJS/jquery-3.6.0.min.js"></script> 
+    <script src="./ristoranteJS/piatti.js"></script>
     <!-- Libreria per i popout di conferma -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <!-- Barra di ricerca -->
@@ -39,13 +39,13 @@
                       <li class='nav-item' style="padding-right: 10px;">  
                         <div class="d-flex justify-content-center h-100">
                           <div class="searchbarMenu">
-                            <input class="search_input" id="myInput" type="text" name="" placeholder="Search...">
+                            <input class="search_input" id="ricercaPiatti" type="text" name="" placeholder="Search...">
                             <a href="#" class="search_icon"><i class="fas fa-search"></i></a>
                           </div>
                         </div>  
                         </li> 
                         <!-- End -->
-	                     <li class='nav-item'>   
+	                     <li class='nav-item distance-btn'>   
 	                       <a class='nav-link active bg-yellow text-btn' aria-current='page' href='ristoranti.html'>Home</a>   
 	                     </li> 
                        <li class='nav-item dropdown distance-btn'>   
@@ -55,7 +55,7 @@
                         <ul class='dropdown-menu dropdown-menu-lg-end' aria-labelledby='navbarDropdown'> 
                           <li><a class='dropdown-item' aria-current='page' href='ristoranti.html'>Lista Ristoranti</a></li>  
                           <li><a class='dropdown-item' aria-current='page' href='menu.html'>Menu Completo</a></li>
-                          <li><a class='dropdown-item disabled' aria-current='page' href='categorie.html'>Lista Categorie</a></li>
+                          <li><a class='dropdown-item disabled' aria-current='page' href='categorie.html' hidden>Lista Categorie</a></li>
                         </ul> 
                         </li>
                           <li class='nav-item dropdown distance-btn'>   
@@ -63,7 +63,7 @@
                                 <ul class='dropdown-menu dropdown-menu-lg-end' aria-labelledby='navbarDropdown'>   
                                   <li><a class='dropdown-item' aria-current='page' href='aggiungi-ristorante.html'>Aggiungi Ristorante</a></li>
                                   <li><a class='dropdown-item' aria-current='page' href='aggiungi-piatto.html'>Aggiungi Piatto al Menu</a></li>
-                                  <li><a class='dropdown-item' data-bs-toggle="modal" data-bs-target="#aggiungiCategoria">Aggiungi Categoria</a></li>
+                                  <li><a class='dropdown-item' data-bs-toggle="modal" data-bs-target="#aggiungiCategoria" hidden>Aggiungi Categoria</a></li>
                                 </ul> 
                               </li>
                               <li class='nav-item dropdown distance-btn'>   
@@ -114,7 +114,7 @@
                           </div> 
                       </div>
               </form> 
-              <div class="modal fade opacity" id="aggiungiCategoria" tabindex="-1" aria-hidden="true">
+            <!--  <div class="modal fade opacity" id="aggiungiCategoria" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -135,6 +135,98 @@
                       <button type="button" id="btnModificaConf" class="btn btn-primary text-btn bg-yellow">Aggiungi</button>
                     </div>
                   </div>
+                </div>
+              </div> -->
+
+              <!-- Modale Modifica -->
+              <div class="modal fade opacity" id="modifica" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header mx-auto">
+                      <div class="text-center">
+                        <figure class="hover-rotate">
+                        <img src="logos/linkedin_profile_image.png" alt="block" style="width: 150px;">
+                        <br><br>
+                    <p class='fs-2 fw-bold text-dark text-center'>Modifica Ristorante</p> 
+                        </figure>
+                    </div>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                             
+                            <div class="row">
+                                    <div class='mb-3 col'> 
+                                        <label for='ragionesociale' class='form-label'>Nome</label> 
+                                        <input type='text' id='ragionesociale' class='form-control' placeholder="Inserire Nome da modificare..." required> 
+                                    </div> 
+                                    <div class='mb-3 col'> 
+                                         <label for='piva' class='form-label'>IVA</label> 
+                                            <input type='text' id='piva' class='form-control' placeholder="Inserire IVA da modificare..." required> 
+                                     </div>
+                                     </div>
+                                     <div class="row">
+                                      <div class='mb-3 col'> 
+                                        <label for='cittaRistorante' class='form-label'>Città</label> 
+                                            <input type='text' id='cittaRistorante' class='form-control' placeholder="Inserire Città da modificare..." required> 
+                                    </div>   
+                                    <div class='mb-3 col'> 
+                                         <label for='regioneRistorante' class='form-label'>Regione</label> 
+                                             <input type='text' id='regioneRistorante' class='form-control' placeholder="Inserire Regione da modificare..." required> 
+                                    </div> 
+                                     </div>
+                                     <div class="row">
+                                    <div class='mb-3 col'> 
+                                    <label for='viaRistorante' class='form-label'>Via</label> 
+                                        <input type='text' id='viaRistorante' class='form-control' placeholder="Inserire Via da modificare..." required> 
+                                    </div> 
+                                    <div class='mb-3 col'> 
+                                        <label for='ncivico' class='form-label'>N. Civico</label> 
+                                           <input type='number' id='ncivico' class='form-control' placeholder="Inserire N. Civico da modificare..." required> 
+                                    </div>
+                                    </div>
+                                        <button class='btn btn-primary float-end' id="modificaRistorante">Invia Modifica</button>  
+                      </div>
+                  </div>  
+                </div>
+              </div>
+              <!-- Modale Dettaglio -->
+              <div class="modal fade opacity" id="dettaglio" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-fullscreen">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <figure class="hover-rotate mx-auto">
+                        <img src="logos/linkedin_profile_image.png" alt="block" style="width: 150px;">
+                      </figure>
+                    <p class='fs-1 fw-bold text-dark modal-title float-end' id="title"></p> 
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">    
+                      <div class="row">
+                        <div class="col-sm-4 mx-auto" style="padding-bottom: 30px;">
+                          <div class="card" style="padding: 30px;">
+                            <div class='card-body'> 
+                                <div class='text-center'> 
+                                  <div id="dettaglioPiatto"></div>
+                                <br></br> 
+                                   <a href='menu.html' class='btn btn-primary'>Torna al Menu</button></a> 
+                                </div>   
+                            </div> 
+                        </div> 
+                        </div>
+                        <div class="col-sm-4 mx-auto" style="padding-bottom: 30px;">
+                          <div class="card" style="padding: 30px;">
+                            <div class='card-body'> 
+                                <div class='text-center'> 
+                                  <div id="dettaglioRistorante"></div>
+                                <br></br> 
+                                   <a href='ristoranti.html' class='btn btn-primary'>Vai ai Ristoranti</button></a> 
+                                </div>   
+                            </div> 
+                        </div> 
+                        </div>
+                    </div> 
+                      </div>
+                  </div>  
                 </div>
               </div>
             </body>
