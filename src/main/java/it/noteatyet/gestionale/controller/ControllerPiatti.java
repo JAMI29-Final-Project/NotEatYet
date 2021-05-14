@@ -75,13 +75,13 @@ public class ControllerPiatti {
         piattiGEST.deleteById(idPiatto);
     }
 
-    @PutMapping("/piatti/edit/{idCategoria}")
-    public void editPiatto( @PathVariable int idCategoria, @RequestBody Piatto piattoModifica ){
+    @PutMapping("/piatti/edit")
+    public void editPiatto(@RequestBody Piatto piattoModifica ){
 
         Piatto piatto = piattiGEST.findById(piattoModifica.getId()).orElse(null);
         piattoModifica.setRistorante(piatto.getRistorante());
 
-        Categoria categoria = categorieGEST.findById(idCategoria).orElse(null);
+        Categoria categoria = categorieGEST.findById(piattoModifica.getCategoria().getId()).orElse(null);
         //Ristorante ristorante = ristorantiGEST.findById(idRistorante).orElse(null);
         piattoModifica.setCategoria(categoria);
         //piatto.setRistorante(ristorante);

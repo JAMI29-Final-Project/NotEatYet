@@ -120,10 +120,10 @@ $(document).ready(function () {
       });
 
     function getCategorieSelect() {
-        $.get('/piatti', function (selectCategoria) {
+        $.get('/categorie', function (selectCategoria) {
             const categoriaSelect = $('#selectCategorie');
             for (let i = 0; i < selectCategoria.length; i++) {
-                $(`<option id='catSelect' value="${selectCategoria[i].categoria.id}">${selectCategoria[i].categoria.nome}</option>`)
+                $(`<option id='catSelect' value="${selectCategoria[i].id}">${selectCategoria[i].nome}</option>`)
                 .hide().appendTo(categoriaSelect).fadeIn(i * 100);
             }
           })
@@ -136,9 +136,9 @@ $(document).ready(function () {
     $('#listaPiatti').on('click', '.btn-modifica', function () {
         editMode = true;
         const id = +$(this).attr('data-id');
-        const idcat = +$(this).attr('data-categoria');
+        
         idModifica = id;
-        idcategoria = idcat;
+        
         $.get(`/piatti/piattoid/${id}`, function(modifica) {
             $('#nome').val(modifica.nome);
             $('#categoria').val(modifica.categoria.nome);
@@ -150,13 +150,15 @@ $(document).ready(function () {
     });
     $('#modificaPiatto').click(function () {
         const piatto = {
+            id: idModifica,
             nome: $('#nome').val(),
             prezzo: $('#prezzo').val(),
             categoria: {
-                id: $('#catSelect'),
+                id: $('#selectCategorie').val(),
             }           
         }
-        console.log(piatto);
+        const idcat = $('#catSelect').val();
+        idcategoria = idcat;
         if (editMode) {
             Swal.fire({
                 icon: 'question',
@@ -166,7 +168,6 @@ $(document).ready(function () {
                 confirmButtonText: `Salva`,
                 denyButtonText: `Non Salvare`,
             }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
                     Swal.fire('Salvato!', '', 'success')
                     piatto.id = idModifica;
@@ -183,21 +184,37 @@ $(document).ready(function () {
     function modificaPiatto(piatto) {
         $.ajax({
             type: "PUT",
-            url: `piatti/edit/${idcategoria}`,
+            url: `piatti/edit`,
             data: JSON.stringify(piatto),
             contentType: 'application/json',
             dataType: 'json',
             success: function (response) {
                     editMode = false;
                     idModifica = -1;
+                    idcategoria = -1;
             },
            /* error: function (error) {
                 alert("Problema nella modifica");                
+                console.log(error);
             }*/
         });
     }
 
-    function addpiatto(piatto){
+    $('#aggiungiPiatto').click(function () {
+        const piatto = {
+            nome: $('#nomePiatto').val(),
+            prezzo: $('#prezzoPiatto').val(),
+            categoria: {
+                id: $('#selectCategorie').val(),
+            }     
+        }
+        addPiatto(piatto);
+        
+        $('#nomePiatto').val('');
+        $('#prezzoPiatto').val('');
+        $('#categoriaPiatto').val('');
+    })
+    function addPiatto(piatto){
         console.log(piatto);
         $.ajax({
             type: 'POST',

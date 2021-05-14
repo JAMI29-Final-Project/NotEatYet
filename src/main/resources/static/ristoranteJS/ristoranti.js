@@ -57,8 +57,8 @@ $(document).ready(function () {
                         <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Opzioni</button>
                             <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                 <li><a class="dropdown-item btn-dettaglio" data-bs-toggle="modal" data-bs-target="#dettaglio" data-id='${listaPiatti[i].id}'>Dettaglio</a></li>
-                                <li><a class="dropdown-item btn-modifica-risto" data-bs-toggle="modal" data-bs-target="#modifica" data-id='${listaPiatti[i].id}'>Modifica</a></li>
-                                <li><a class="dropdown-item btn-elimina-risto" data-id='${listaPiatti[i].id}'>Elimina</a></li>
+                                <li><a class="dropdown-item btn-modifica" data-bs-toggle="modal" data-bs-target="#modificaPiatto" data-idLista='${listaPiatti[i].id}'>Modifica</a></li>
+                                <li><a class="dropdown-item btn-elimina" data-idLista='${listaPiatti[i].id}'>Elimina</a></li>
                             </ul>
                     </div>
                 </td>
@@ -196,4 +196,141 @@ $(document).ready(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1 )
         } );
     });
+
+
+
+    // DETTAGLIO ELIMINA PIATTO
+    function detetePiatto(idPiatto) {
+        let idPagina = $(`#riga-${idPiatto}`);
+        $.ajax({
+            type: "DELETE",
+            url: `piatti/elimina/${idPiatto}`,
+            success: function (response) {
+                idPagina.slideUp(300, function () {
+                    idPagina.remove(); 
+                })
+            },
+            error: function(error) {
+                alert("Errore durante la cancellazione. Riprovare."); 
+            }
+        });
+      }
+      $('#listaMenuDettaglio').on('click', '.btn-elimina', function() {
+        const idPiatto = $(this).attr('data-idLista');
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-danger',
+                cancelButton: 'btn btn-primary mx-2'
+            },
+            buttonsStyling: false
+          })
+          swalWithBootstrapButtons.fire({
+            title: 'Sei Sicuro?',
+            text: "Operazione Irreversibile!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Elimina',
+            cancelButtonText: 'Esci',
+            reverseButtons: true
+          }).then((result) => {
+            if (result.isConfirmed) {
+              swalWithBootstrapButtons.fire(
+                'Cancellato!',
+                'Il tuo Piatto è stato Eliminato.',
+                'success'
+              )
+              detetePiatto(idPiatto);
+            } else if (
+              result.dismiss === Swal.DismissReason.cancel
+            ) {
+              swalWithBootstrapButtons.fire(
+                'Uscita',
+                'Il tuo Piatto è salvo',
+                'error'
+              )
+            }
+          })
+      });
+
+      //DETTAGLIO MODIFICA PIATTO
+      function getCategorieSelect() {
+        $.get('/categorie', function (selectCategoria) {
+            const categoriaSelect = $('#selectCategorie');
+            for (let i = 0; i < selectCategoria.length; i++) {
+                $(`<option id='catSelect' value="${selectCategoria[i].id}">${selectCategoria[i].nome}</option>`)
+                .hide().appendTo(categoriaSelect).fadeIn(i * 100);
+            }
+          })
+    } 
+    getCategorieSelect();
+
+ /*   let editMode = false;
+    let idModifica = -1;*/
+    let idcategoria = -1;
+    $('#listaMenuDettaglio').on('click', '.btn-modifica', function () {
+        editMode = true;
+        const id = +$(this).attr('data-idList');
+        
+        idModifica = id;
+        
+        $.get(`/piatti/piattoid/${id}`, function(modifica) {
+            $('#nome').val(modifica.nome);
+            $('#categoria').val(modifica.categoria.nome);
+            $('#prezzo').val(modifica.prezzo);
+            $('#modificaPiattoTitle').text('Modifica ' + modifica.nome);
+            $('#modificaPiatto').text('Modifica ' + modifica.nome);
+            $('#title').text('Modifica ' + modifica.nome);
+        });
+    });
+    $('#modificaPiatto').click(function () {
+        const piatto = {
+            id: idModifica,
+            nome: $('#nome').val(),
+            prezzo: $('#prezzo').val(),
+            categoria: {
+                id: $('#selectCategorie').val(),
+            }           
+        }
+        const idcat = $('#catSelect').val();
+        idcategoria = idcat;
+        if (editMode) {
+            Swal.fire({
+                icon: 'question',
+                title: 'Vuoi salvare la Modifica di ' + piatto.nome + '?',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: `Salva`,
+                denyButtonText: `Non Salvare`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire('Salvato!', '', 'success')
+                    piatto.id = idModifica;
+                    modificaPiatto(piatto);
+                    setTimeout(function () {
+                        window.location.href='menu.html';
+                    }, 2000);
+                } else if (result.isDenied) {
+                    Swal.fire('Modifiche non salvate', '', 'info')
+                }
+            })     
+        }
+    })
+    function modificaPiatto(piatto) {
+        $.ajax({
+            type: "PUT",
+            url: `piatti/edit`,
+            data: JSON.stringify(piatto),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (response) {
+                    editMode = false;
+                    idModifica = -1;
+                    idcategoria = -1;
+            },
+           /* error: function (error) {
+                alert("Problema nella modifica");                
+                console.log(error);
+            }*/
+        });
+    }
 });

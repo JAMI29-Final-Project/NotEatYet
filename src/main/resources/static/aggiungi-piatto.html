@@ -7,8 +7,8 @@
 	<meta name='viewport' content='width=device-width, initial-scale=1.0'> 
   <!-- Stile Personalizzato Solo per le liste -->  
 	<link rel="stylesheet" href="css/lista_style.css">
-    <script src="jquery-3.6.0.min.js"></script> 
-    <script src="main.js"></script>
+    <script src="./ristoranteJS/jquery-3.6.0.min.js"></script> 
+    <script src="./ristoranteJS/aggiungiPiatto.js"></script>
     <!-- Libreria per i popout di conferma -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <!-- Barra di ricerca -->
@@ -90,25 +90,27 @@
                                             <input type='text' id='nomePiatto' class='form-control' placeholder="Inserire Nome..." required> 
                                         </div> 
                                         <div class='mb-3 col'> 
-                                             <label for='iva' class='form-label'>Prezzo</label> 
-                                                <input type='number' id='iva' class='form-control' placeholder="Inserire Prezzo..." required> 
+                                             <label for='prezzo' class='form-label'>Prezzo</label> 
+                                                <input type='number' id='prezzo' class='form-control' placeholder="Inserire Prezzo..." required> 
                                         </div>
                                         </div>
                                         <div style="padding-bottom: 10px;">
-                                        <label for='ristorante' class='form-label'>Ristorante</label>
-                                        <select class="form-select" id="ristorante" aria-label="Default select example">
-                                          <option selected>Seleziona Ristorante</option>
-                                          <option value="1">MC Donalds</option>
-                                          <option value="2">Burger King</option>
+                                        <label for='selectCategorie' class='form-label'>Categoria</label>
+                                        <select class="form-select" id="selectCategorie" aria-label="Default select example">
                                         </select>
                                         </div>
+                                        <div style="padding-bottom: 10px;">
+                                          <label for='ristorante' class='form-label'>Ristorante</label>
+                                          <select class="form-select" id="ristorante" aria-label="Default select example">
+                                          </select>
+                                          </div>
                                         <label for='floatingTextarea' class='form-label'>Lista ingredienti</label>
                                         <div class="form-floating"> 
                                             <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="height: 100px"></textarea>
                                             <label for="floatingTextarea">Inserire gli Ingredienti con la virgola</label>
                                           </div>
                                           <br>
-                                            <button class='btn btn-primary float-end' id="aggiungiCategoria">Aggiungi</button>  
+                                            <button class='btn btn-primary float-end' id="aggiungiPiatto">Aggiungi</button>  
                                         </div>
                                         </div>
                                     </div> 
