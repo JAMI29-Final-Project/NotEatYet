@@ -1,14 +1,11 @@
 package it.noteatyet.gestionale.controller;
 
-
-
 import it.noteatyet.gestionale.CRUDRepository.*;
 import it.noteatyet.gestionale.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 
 @RestController
 public class ControllerPiatti {
@@ -68,8 +65,14 @@ public class ControllerPiatti {
 
     @DeleteMapping("/piatti/elimina/{idPiatto}")
     public void delete(@PathVariable int idPiatto){
-       ingredientiGEST.deleteIngredienteByPiattoId(idPiatto);
-       piattiGEST.deleteById(idPiatto);
+        Piatto piatto = piattiGEST.findById(idPiatto).orElse(null);
+        piatto.setIngredienti(ingredientiGEST.findIngredienteByPiattoId(piatto.getId()));
+        if(piatto.getIngredienti() != null){
+            for(Ingrediente ingrediente : piatto.getIngredienti()){
+                ingredientiGEST.deleteById(ingrediente.getId());
+            }
+        }
+        piattiGEST.deleteById(idPiatto);
     }
 
     @PutMapping("/piatti/edit/{idRistorante}/{idCategoria}")
