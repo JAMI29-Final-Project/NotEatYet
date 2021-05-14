@@ -13,8 +13,8 @@ $(document).ready(function () {
                     <div class="btn-group" role="group">
                         <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Opzioni</button>
                             <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                <li><a class="dropdown-item btn-dettaglio" href='ristorante-dettaglio.html' data-id='${resume[i].id}'>Dettaglio</a></li>
-                                <li><a class="dropdown-item btn-modifica-risto" data-id='${resume[i].id}'>Modifica</a></li>
+                                <li><a class="dropdown-item btn-dettaglio" data-bs-toggle="modal" data-bs-target="#dettaglio" data-id='${resume[i].id}'>Dettaglio</a></li>
+                                <li><a class="dropdown-item btn-modifica-risto" data-bs-toggle="modal" data-bs-target="#modifica" data-id='${resume[i].id}'>Modifica</a></li>
                                 <li><a class="dropdown-item btn-elimina-risto" data-id='${resume[i].id}'>Elimina</a></li>
                             </ul>
                     </div>
@@ -25,32 +25,48 @@ $(document).ready(function () {
     }
     getRistoranti();
 
+    // Dettaglio Del Ristorante
     $('#output').on('click', '.btn-dettaglio', function () {
         const idristorante = $(this).attr('data-id');
         getRisto(idristorante);
     });
-    
     function getRisto(idristorante) {
-        var row = "";
         $.get(`ristoranti/${idristorante}`, function (dettaglio) {
             console.log(dettaglio);
-            console.log(dettaglio.ragionesociale);
-            console.log(dettaglio.piva);
             const dettaglioRis = $('#dettaglioRis');
-            $('#TEST').text(dettaglio.ragionesociale);
-            $('#nome').text(dettaglio.piva);
-			row = `
-            <p class='fs-1 fw-bold text-dark'>${dettaglio.ragionesociale} nel Dettaglio</p> 
+            $('#title').text(dettaglio.ragionesociale + ' Nel Dettaglio');
+            $('#menuDettaglio').text("Menu di " + dettaglio.ragionesociale);
+			let row = `
             <h4 class='fw-light text-dark'><strong class="fw-bolder">Nome: </strong>${dettaglio.ragionesociale}</h4> 
             <h4 class='fw-light text-dark' id="piva"><strong>Partita IVA: </strong>${dettaglio.piva}</h4>   
-            <h4 class='fw-light text-dark' id="via"><strong>Indirizzo: </strong>[VIA]</h4> 
-            <h4 class='fw-light text-dark' id="citta"><strong>Citta: </strong>[CITTA][REGIONE]</h4>
-            <h4 class='fw-light text-dark' id="regione"><strong>Citta: </strong>[CITTA][REGIONE]</h4>
+            <h4 class='fw-light text-dark' id="via"><strong>Indirizzo: </strong>${dettaglio.via} ${dettaglio.ncivico}</h4> 
+            <h4 class='fw-light text-dark' id="citta"><strong>Citta: </strong>${dettaglio.citta}</h4>
+            <h4 class='fw-light text-dark' id="regione"><strong>Regione: </strong>${dettaglio.regione}</h4>
 			`;
-            console.log(row);
-            $(dettaglioRis).append(row);
+            $(row).hide().appendTo(dettaglioRis).fadeIn(500);
 		})
+        $.get(`piatti/ristoranteid/${idristorante}`, function(listaPiatti) {
+            const ristoranteListaPiatti = $('#listaMenuDettaglio');
+            for (let i = 0; i < listaPiatti.length; i++) {
+                $(`<tr id='riga-${listaPiatti[i].id}'>
+                <td>${listaPiatti[i].nome}</td>
+                <td>${listaPiatti[i].prezzo}</td>
+                <td>${listaPiatti[i].categoria.nome}</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Opzioni</button>
+                            <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                <li><a class="dropdown-item btn-dettaglio" data-bs-toggle="modal" data-bs-target="#dettaglio" data-id='${listaPiatti[i].id}'>Dettaglio</a></li>
+                                <li><a class="dropdown-item btn-modifica-risto" data-bs-toggle="modal" data-bs-target="#modifica" data-id='${listaPiatti[i].id}'>Modifica</a></li>
+                                <li><a class="dropdown-item btn-elimina-risto" data-id='${listaPiatti[i].id}'>Elimina</a></li>
+                            </ul>
+                    </div>
+                </td>
+            </tr>`).hide().appendTo(ristoranteListaPiatti).fadeIn(i * 150); //Gestisci i pulsanti
+            }
+        })
 	} 
+    
 
     function deleteRistorante(id) {
         let idPagina = $(`#riga-${id}`);
@@ -59,15 +75,12 @@ $(document).ready(function () {
             type: "DELETE",
             url: `ristoranti/${id}`,
             success: function (response) {
-                console.log(response);
-                if (response.messaggio === "Ristorante eliminato") {
-                    idPagina.slideUp(300, function () {
-                        idPagina.remove();
-                    });
-                } else {
-                    alert("Errore durante la cancellazione. Riprovare.");
-                }
-                
+                idPagina.slideUp(300, function () {
+                    idPagina.remove(); 
+                })
+            },
+            error: function(error) {
+                alert("Errore durante la cancellazione. Riprovare."); 
             }
         });
       }
@@ -85,7 +98,7 @@ $(document).ready(function () {
           
           swalWithBootstrapButtons.fire({
             title: 'Sei Sicuro?',
-            text: "Operazione irreversibile!",
+            text: "Operazione Irreversibile!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Elimina',
@@ -95,14 +108,18 @@ $(document).ready(function () {
             if (result.isConfirmed) {
               swalWithBootstrapButtons.fire(
                 'Cancellato!',
-                'Ristorante eliminato'
+                'Il tuo Ristorante è stato Eliminato.',
+                'success'
               )
               deleteRistorante(id);
             } else if (
+              /* Read more about handling dismissals below */
               result.dismiss === Swal.DismissReason.cancel
             ) {
               swalWithBootstrapButtons.fire(
-                'Uscita'
+                'Uscita',
+                'Il tuo Ristorante è salvo',
+                'error'
               )
             }
           })
@@ -110,35 +127,31 @@ $(document).ready(function () {
 
       
       function addRistorante(ristorante){
-        console.log(ristorante);
         $.ajax({
             type: 'POST',
-            url: '/ristoranti',
+            url: 'ristoranti',
             data: JSON.stringify(ristorante),
             contentType: 'application/json',
-            dataType: 'json',
-            success: function(response){
-                if (response.messaggio === "Nessun ristorante aggiunto"){
-                    //  let formData = new FormData(); 
-                  //  formData.append("file", fileupload.files[0]);
-                  Swal.fire({
-                        icon: 'error',
-                        title: 'ATTENZIONE!',
-                        text: 'Riprova'
-                      })
-                    } else if (response.messaggio === "Aggiunta effettuata con successo!") {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'INSERITO!',
-                        text: 'Aggiunta andata a buon fine',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    setTimeout(function () {
-                          window.location.href='ristoranti.html';
-                        }, 1500);
-                }
-            }
+          /*  dataType: 'json', */
+            success: function(success){
+                Swal.fire({
+                    icon: 'success',
+                    title: 'INSERITO!',
+                    text: 'Aggiunta andata a buon fine',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                setTimeout(function () {
+                      window.location.href='ristoranti.html';
+                    }, 1500);
+            },
+            error: function () {
+                Swal.fire({
+                      icon: 'error',
+                      title: 'ATTENZIONE!',
+                      text: 'Riprova'
+                    })                
+            } 
         })
     } 
     
@@ -168,20 +181,17 @@ $(document).ready(function () {
     function modificaRistorante(ristorante) {
         $.ajax({
             type: "PUT",
-            url: "ristorante",
+            url: "ristoranti",
             data: JSON.stringify(ristorante),
             contentType: 'application/json',
             dataType: 'json',
             success: function (response) {
-                console.log(response);
-                if (response.message === "Crash sistema in modifica"){
-                    alert("Problema nella modifica");
-                } else if (response.message === "Detto, Fatto") {
                     editMode = false;
                     idModifica = -1;
-                    
-                }
-            }
+            },
+           /* error: function (error) {
+                alert("Problema nella modifica");                
+            }*/
         });
     }
 
@@ -189,10 +199,8 @@ $(document).ready(function () {
         editMode = true;
         const id = +$(this).attr('data-id');
         idModifica = id;
-        window.location.href='modifica-ristorante.html';
 
-        $.get(`ristoranti/${id}`, function(modifica) {
-            console.log(modifica);
+        $.get(`/ristoranti/${id}`, function(modifica) {
             $('#ragionesociale').val(modifica.ragionesociale);
             $('#piva').val(modifica.piva);
             $('#cittaRistorante').val(modifica.citta);
@@ -206,10 +214,9 @@ $(document).ready(function () {
     });
 
     $('#modificaRistorante').click(function () {
-        editMode = true;
         const ristorante = {
-            ragionesociale: $('#nomeRistorante').val(),
-            piva: $('#iva').val(),
+            ragionesociale: $('#ragionesociale').val(),
+            piva: $('#piva').val(),
             citta: $('#cittaRistorante').val(),
             regione: $('#regioneRistorante').val(),
             via: $('#viaRistorante').val(),
@@ -236,11 +243,14 @@ $(document).ready(function () {
                 } else if (result.isDenied) {
                   Swal.fire('Modifiche non salvate', '', 'info')
                 }
-              })
-              
+              })     
         }
-        
     })
+
+
+
+
+    /* GESTIONE PIATTI */
 
     function getPiatti() {
         $.get('/piatti', function (resume) {
@@ -264,39 +274,6 @@ $(document).ready(function () {
           })
     }
     getPiatti();
-    
-    function addpiatto(piatto){
-        console.log(piatto);
-        $.ajax({
-            type: 'POST',
-            url: '/piatti',
-            data: JSON.stringify(piatto),
-            contentType: 'application/json',
-            dataType: 'json',
-            success: function(response){
-                if (response.messaggio === "Nessun piatto aggiunto"){
-                    //  let formData = new FormData(); 
-                    //  formData.append("file", fileupload.files[0]);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'ATTENZIONE!',
-                        text: 'Riprova'
-                    })
-                } else if (response.messaggio === "Aggiunta effettuata con successo!") {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'INSERITO!',
-                        text: 'Aggiunta andata a buon fine',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                      setTimeout(function () {
-                          window.location.href='ristoranti.html';
-                        }, 1500);
-                    }
-                }
-            })
-        }
         
         $ ( "#myInput" ).on ( "keyup", function () {
             var value = $ ( this ).val ().toLowerCase ();
