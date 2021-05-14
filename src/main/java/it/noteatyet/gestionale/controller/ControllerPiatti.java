@@ -11,7 +11,6 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping
 public class ControllerPiatti {
 
     //interfaccia che gestisce le chiamate della tabella Ristoranti
@@ -32,16 +31,24 @@ public class ControllerPiatti {
 
     @GetMapping("/piatti/ristoranteid/{idRistoratore}")
     public List<Piatto> piatti (@PathVariable int idRistoratore){
-        return piattiGEST.findPiattoByRistoranteId(idRistoratore);
+        List <Piatto> piatti = piattiGEST.findPiattoByRistoranteId(idRistoratore);
+        for(Piatto piatto : piatti){
+            piatto.setIngredienti(ingredientiGEST.findIngredienteByPiattoId(piatto.getId()));
+        }
+
+        return piatti;
+
     }
 
     @GetMapping("/piatti/piattoid/{idPiatto}")
-    public Piatto piatto (int piatto){
-
-        return piattiGEST.findById(piatto).orElse(null);
+    public Piatto piatto (@PathVariable int idPiatto){
+        System.out.println(idPiatto +"");
+        Piatto piatto = piattiGEST.findById(idPiatto).orElse(null);
+        piatto.setIngredienti(ingredientiGEST.findIngredienteByPiattoId(piatto.getId()));
+        return piatto;
     }
 
-    @PostMapping("/piatti/{idRistorante}/{idCaregoria}")
+    @PostMapping("/piatti/aggiungi/{idRistorante}/{idCategoria}")
     public void addPiatto(@PathVariable int idRistorante, @PathVariable int idCategoria, @RequestBody Piatto piatto){
         Categoria categoria = categorieGEST.findById(idCategoria).orElse(null);
         Ristorante ristorante = ristorantiGEST.findById(idRistorante).orElse(null);
@@ -50,14 +57,18 @@ public class ControllerPiatti {
         piattiGEST.save(piatto);
     }
 
-    @DeleteMapping("/piatti/{idPiatto}")
+    @DeleteMapping("/piatti/elimina/{idPiatto}")
     public void delete(@PathVariable int idPiatto){
        ingredientiGEST.deleteIngredienteByPiattoId(idPiatto);
        piattiGEST.deleteById(idPiatto);
     }
 
-    @PutMapping("/piatti/{idRistorante}/{idCaregoria}")
+    @PutMapping("/piatti/edit/{idRistorante}/{idCategoria}")
     public void editPiatto(@PathVariable int idRistorante, @PathVariable int idCategoria, @RequestBody Piatto piatto ){
-
+        Categoria categoria = categorieGEST.findById(idCategoria).orElse(null);
+        Ristorante ristorante = ristorantiGEST.findById(idRistorante).orElse(null);
+        piatto.setCategoria(categoria);
+        piatto.setRistorante(ristorante);
+        piattiGEST.save(piatto);
     }
 }
