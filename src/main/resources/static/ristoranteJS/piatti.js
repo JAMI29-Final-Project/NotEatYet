@@ -118,37 +118,49 @@ $(document).ready(function () {
             }
           })
       });
-    
+
+    function getCategorieSelect() {
+        $.get('/piatti', function (selectCategoria) {
+            const categoriaSelect = $('#selectCategorie');
+            for (let i = 0; i < selectCategoria.length; i++) {
+                $(`<option id='catSelect' value="${selectCategoria[i].categoria.id}">${selectCategoria[i].categoria.nome}</option>`)
+                .hide().appendTo(categoriaSelect).fadeIn(i * 100);
+            }
+          })
+    } 
+    getCategorieSelect();
+
     let editMode = false;
     let idModifica = -1;
+    let idcategoria = -1;
     $('#listaPiatti').on('click', '.btn-modifica', function () {
         editMode = true;
         const id = +$(this).attr('data-id');
-        const categoria = +$(this).attr('data-categoria');
+        const idcat = +$(this).attr('data-categoria');
         idModifica = id;
+        idcategoria = idcat;
         $.get(`/piatti/piattoid/${id}`, function(modifica) {
             $('#nome').val(modifica.nome);
             $('#categoria').val(modifica.categoria.nome);
             $('#prezzo').val(modifica.prezzo);
-            $('#modificaRistormodificaPiattoTitleanteTitle').text('Modifica ' + modifica.nome);
+            $('#modificaPiattoTitle').text('Modifica ' + modifica.nome);
             $('#modificaPiatto').text('Modifica ' + modifica.nome);
             $('#title').text('Modifica ' + modifica.nome);
         });
     });
-    $('#modificaRistorante').click(function () {
-        const ristorante = {
-            ragionesociale: $('#ragionesociale').val(),
-            piva: $('#piva').val(),
-            citta: $('#cittaRistorante').val(),
-            regione: $('#regioneRistorante').val(),
-            via: $('#viaRistorante').val(),
-            ncivico: $('#ncivico').val()            
+    $('#modificaPiatto').click(function () {
+        const piatto = {
+            nome: $('#nome').val(),
+            prezzo: $('#prezzo').val(),
+            categoria: {
+                id: $('#catSelect'),
+            }           
         }
-        console.log(ristorante);
+        console.log(piatto);
         if (editMode) {
             Swal.fire({
                 icon: 'question',
-                title: 'Vuoi salvare la Modifica di ' + ristorante.ragionesociale + '?',
+                title: 'Vuoi salvare la Modifica di ' + piatto.nome + '?',
                 showDenyButton: true,
                 showCancelButton: true,
                 confirmButtonText: `Salva`,
@@ -157,10 +169,10 @@ $(document).ready(function () {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
                     Swal.fire('Salvato!', '', 'success')
-                    ristorante.id = idModifica;
-                    modificaRistorante(ristorante);
+                    piatto.id = idModifica;
+                    modificaPiatto(piatto);
                     setTimeout(function () {
-                        window.location.href='ristoranti.html';
+                        window.location.href='menu.html';
                     }, 2000);
                 } else if (result.isDenied) {
                     Swal.fire('Modifiche non salvate', '', 'info')
@@ -168,11 +180,11 @@ $(document).ready(function () {
             })     
         }
     })
-    function modificaRistorante(ristorante) {
+    function modificaPiatto(piatto) {
         $.ajax({
             type: "PUT",
-            url: "ristoranti",
-            data: JSON.stringify(ristorante),
+            url: `piatti/edit/${idcategoria}`,
+            data: JSON.stringify(piatto),
             contentType: 'application/json',
             dataType: 'json',
             success: function (response) {
@@ -184,6 +196,7 @@ $(document).ready(function () {
             }*/
         });
     }
+
     function addpiatto(piatto){
         console.log(piatto);
         $.ajax({
