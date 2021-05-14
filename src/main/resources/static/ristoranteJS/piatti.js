@@ -25,6 +25,11 @@ $(document).ready(function () {
     }
     getPiatti();
 
+    $('#piattoDettaglioClose').click(function (){
+        $('#dettaglioPiatto').html('');
+        $('#dettaglioRistorante').html('');
+    });
+
     // Dettaglio Del Ristorante
     $('#listaPiatti').on('click', '.btn-dettaglio', function () {
         const idPiatto = $(this).attr('data-id');

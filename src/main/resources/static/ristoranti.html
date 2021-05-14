@@ -145,7 +145,7 @@
                     <p class='fs-2 fw-bold text-dark text-center' id="modificaRistoranteTitle">Modifica Ristorante</p> 
                         </figure>
                     </div>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      <button type="button"  class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                              
@@ -193,7 +193,7 @@
                         <img src="logos/linkedin_profile_image.png" alt="block" style="width: 150px;">
                       </figure>
                     <p class='fs-1 fw-bold text-dark modal-title float-end' id="title"></p> 
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <button type="button" id="ristoranteDettaglioClose" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">    
                       <div class="row">
@@ -236,8 +236,9 @@
                   </div>  
                 </div>
               </div>
+
               <!-- Modale Modifica -->
-              <div class="modal fade" id="modificaPiatto" tabindex="-1" aria-hidden="true">
+              <div class="modal fade" id="modificaPiat" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class="modal-header mx-auto">
@@ -266,6 +267,28 @@
                                      <button class='btn btn-primary float-end' id="modificaPiatto">Invia Modifica</button>  
                                      </div>
                                     </div>
+                      </div>
+                  </div> 
+
+                  <!-- Modale Dettaglio Piatto -->
+              <div class="modal fade" id="dettaglioPiat" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <figure class="hover-rotate mx-auto">
+                        <img src="logos/linkedin_profile_image.png" alt="block" style="width: 150px;">
+                      </figure>
+                    <p class='fs-3 fw-bold text-dark modal-title float-end' id="titlePiatto"></p> 
+                  <button type="button" id="listaDettaglioClose" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body"> 
+                                <div class='text-center'> 
+                                  <div id="dettaglioPiatto"></div>
+                                </div>   
+                                <br></br><hr>
+                                   <a href='ristoranti.html' class='btn btn-primary float-end'>Torna ai Ristoranti</button></a> 
+                            </div> 
+                    </div> 
                       </div>
                   </div> 
   </body>

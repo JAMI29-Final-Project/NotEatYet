@@ -25,6 +25,16 @@ $(document).ready(function () {
     }
     getRistoranti();
 
+    $('#ristoranteDettaglioClose').click(function (){
+        $('#dettaglioRis').html('');
+        $('#listaMenuDettaglio').html('');
+    });
+    $('#listaDettaglioClose').click(function (){
+        $('#dettaglioPiatto').html('');
+    });
+   /* $('#ristoranteDettaglioCloseHead').on('click', '#ristoranteDettaglioClose', function () {
+        getRistoranti();
+    });*/
     // Dettaglio Del Ristorante
     $('#listaRistoranti').on('click', '.btn-dettaglio', function () {
         const idristorante = $(this).attr('data-id');
@@ -56,8 +66,8 @@ $(document).ready(function () {
                     <div class="btn-group" role="group">
                         <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Opzioni</button>
                             <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                <li><a class="dropdown-item btn-dettaglio" data-bs-toggle="modal" data-bs-target="#dettaglio" data-id='${listaPiatti[i].id}'>Dettaglio</a></li>
-                                <li><a class="dropdown-item btn-modifica" data-bs-toggle="modal" data-bs-target="#modificaPiatto" data-idLista='${listaPiatti[i].id}'>Modifica</a></li>
+                                <li><a class="dropdown-item btn-dettaglioPiatto" data-bs-toggle="modal" data-bs-target="#dettaglioPiat" data-idLista='${listaPiatti[i].id}'>Dettaglio</a></li>
+                                <li><a class="dropdown-item btn-modifica" data-bs-toggle="modal" data-bs-target="#modificaPiat" data-idLista='${listaPiatti[i].id}'>Modifica</a></li>
                                 <li><a class="dropdown-item btn-elimina" data-idLista='${listaPiatti[i].id}'>Elimina</a></li>
                             </ul>
                     </div>
@@ -264,16 +274,17 @@ $(document).ready(function () {
     } 
     getCategorieSelect();
 
- /*   let editMode = false;
-    let idModifica = -1;*/
-    let idcategoria = -1;
+    let editModePiatto = false;
+    let idModificaPiatto = -1;
+    let idcategoriaPiatto = -1;
     $('#listaMenuDettaglio').on('click', '.btn-modifica', function () {
-        editMode = true;
-        const id = +$(this).attr('data-idList');
+        editModePiatto = true;
+        const idModPiatto = +$(this).attr('data-idLista');
         
-        idModifica = id;
+        idModificaPiatto = idModPiatto;
+        console.log(idModificaPiatto);
         
-        $.get(`/piatti/piattoid/${id}`, function(modifica) {
+        $.get(`/piatti/piattoid/${idModificaPiatto}`, function(modifica) {
             $('#nome').val(modifica.nome);
             $('#categoria').val(modifica.categoria.nome);
             $('#prezzo').val(modifica.prezzo);
@@ -284,16 +295,16 @@ $(document).ready(function () {
     });
     $('#modificaPiatto').click(function () {
         const piatto = {
-            id: idModifica,
+            id: idModificaPiatto,
             nome: $('#nome').val(),
             prezzo: $('#prezzo').val(),
             categoria: {
                 id: $('#selectCategorie').val(),
             }           
         }
-        const idcat = $('#catSelect').val();
-        idcategoria = idcat;
-        if (editMode) {
+        const idcatPiat = $('#catSelect').val();
+        idcategoriaPiatto = idcatPiat;
+        if (editModePiatto) {
             Swal.fire({
                 icon: 'question',
                 title: 'Vuoi salvare la Modifica di ' + piatto.nome + '?',
@@ -304,10 +315,10 @@ $(document).ready(function () {
             }).then((result) => {
                 if (result.isConfirmed) {
                     Swal.fire('Salvato!', '', 'success')
-                    piatto.id = idModifica;
+                    piatto.id = idModificaPiatto;
                     modificaPiatto(piatto);
                     setTimeout(function () {
-                        window.location.href='menu.html';
+                        window.location.href='ristoranti.html';
                     }, 2000);
                 } else if (result.isDenied) {
                     Swal.fire('Modifiche non salvate', '', 'info')
@@ -323,9 +334,9 @@ $(document).ready(function () {
             contentType: 'application/json',
             dataType: 'json',
             success: function (response) {
-                    editMode = false;
-                    idModifica = -1;
-                    idcategoria = -1;
+                    editModePiatto = false;
+                    idModificaPiatto = -1;
+                    idcategoriaPiatto = -1;
             },
            /* error: function (error) {
                 alert("Problema nella modifica");                
@@ -333,4 +344,25 @@ $(document).ready(function () {
             }*/
         });
     }
+
+    // DETTAGLIO PIATTO
+    $('#listaMenuDettaglio').on('click', '.btn-dettaglioPiatto', function () {
+        const idDetPiatto = $(this).attr('data-idLista');
+        getPiatto(idDetPiatto);
+    });
+    function getPiatto(idDetPiatto) {
+        $.get(`piatti/piattoid/${idDetPiatto}`, function (dettaglio) {
+            console.log(dettaglio);
+            const dettaglioPiatto = $('#dettaglioPiatto');
+            $('#titlePiatto').text(dettaglio.nome + ' Nel Dettaglio');
+			let row = `
+            <h4 class='fw-light text-dark'><strong class="fw-bolder">Nome: </strong>${dettaglio.nome}</h4> 
+            <h4 class='fw-light text-dark'><strong>Prezzo: </strong>${dettaglio.prezzo}</h4>   
+            <h4 class='fw-light text-dark'><strong>Categoria: </strong>${dettaglio.categoria.nome}</h4> 
+            <h4 class='fw-light text-dark'><strong>Ingredienti: </strong>${dettaglio.ingredienti}</h4>
+			`;
+            $(row).hide().appendTo(dettaglioPiatto).fadeIn(500);
+		})
+        
+	} 
 });
