@@ -1,14 +1,11 @@
 package it.noteatyet.gestionale.controller;
 
-
-
 import it.noteatyet.gestionale.CRUDRepository.*;
 import it.noteatyet.gestionale.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 
 @RestController
 public class ControllerPiatti {
